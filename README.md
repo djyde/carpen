@@ -1,5 +1,8 @@
 # Carpen
 
+![](https://badgen.net/npm/v/carpen)
+![](https://badgen.net/badge/icon/chrome?icon=chrome&label)
+
 Build light weight GUI with frontend stack.
 
 ## Pre-request
