@@ -11,9 +11,11 @@
   "files": [
     "lib"
   ],
+  "bin": "bin/carpen",
   "dependencies": {
     "carlo": "^0.9.46",
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "yargs": "^14.2.0"
   },
   "devDependencies": {
     "typescript": "^3.6.4"

@@ -36,16 +36,13 @@ Write a `index.html` as entry:
 </html>
 ```
 
-`./app.js` is your app:
+Write your app code on `./app.js`:
 
 ```js
-import React from 'react'
-import { render } from 'react-dom'
-
-render(<div>Hello world</div>, document.querySelector('#root'))
+document.querySelector('#root').innerHTML = '<div>Hello world</div>'
 ```
 
-Then run `npm run dev`, [Parcel](https://parceljs.org) will parse the `index.html` and bundle the code. Finally the app would start and is ready for your development.
+Then run `npm run dev`, [Parcel](https://parceljs.org) will parse the `index.html` and bundle the code, so feel free to use any stacks you prefer. Finally the app would start and is ready for your development.
 
 # License
 

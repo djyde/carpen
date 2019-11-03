@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+const yargs = require('yargs')
+const carpen = require('../lib')
+
+const app = yargs
+  .option('e', {
+    alias: 'entry',
+    describe: 'The entry HTML file',
+    type: 'string'
+  })
+  .option('p', {
+    alias: 'port',
+    describe: 'Dev server port',
+    type: 'number'
+  })
+  
+  .command('build', 'Build up your app', {
+
+  }, ({ entry, port }) => {
+    carpen.build(process.cwd(), {
+      port: port,
+      entryFile: entry
+    })
+  })
+  .argv
+
+
+if (app._.length === 0) {
+  // dev
+  carpen.dev(process.cwd(), {
+    port: app.port,
+    entryFile: app.entry,
+    dev: true
+  })
+}

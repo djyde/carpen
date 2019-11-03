@@ -4,25 +4,27 @@ import * as path from 'path'
 
 import * as Bundler from 'parcel-bundler'
 
-export type CarpenStartOptions = {
+export type CarpenDevOptions = {
   dev?: boolean,
   port?: number,
+  entryFile?: string,
   exposed?: {[functionName: string]: any},
 }
 
-export async function start (appDir: string, options: CarpenStartOptions = {}) {
+export async function dev (appDir: string, options: CarpenDevOptions = {}) {
 
-  const IS_DEV = options.dev === true || process.env.NODE_ENV !== 'production'
+  const IS_DEV = options.dev !== false || process.env.NODE_ENV !== 'production'
   const PORT = options.port || 2342
   const EXPOSED = options.exposed || {}
   const HOST = `http://localhost`
+  const ENTRY_FILE = options.entryFile || './index.html'
 
-  const entry = path.resolve(appDir, './index.html')
+  const entry = path.resolve(appDir, ENTRY_FILE)
 
   const bundler = new Bundler(entry, {
     outDir: path.resolve(appDir, './.carpen'),
     cacheDir: path.resolve(appDir, './.carpen_cache'),
-    minify: IS_DEV
+    minify: !IS_DEV
   })
 
   await bundler.serve(PORT)
@@ -32,7 +34,6 @@ export async function start (appDir: string, options: CarpenStartOptions = {}) {
   Object.keys(EXPOSED).map(fnName => {
     const fn = EXPOSED[fnName]
     app.exposeFunction(fnName, fn)
-    console.log('exposed', fnName)
   })
 
   if (IS_DEV) {
@@ -42,4 +43,24 @@ export async function start (appDir: string, options: CarpenStartOptions = {}) {
   app.on('exit', () => process.exit())
 
   await app.load(`${HOST}:${PORT}`)
+}
+
+export type CarpenBuildOptions = {
+  entryFile?: string,
+}
+
+export async function build (appDir: string, options: CarpenBuildOptions = {}) {
+  const ENTRY_FILE = options.entryFile || './index.html'
+
+  const entry = path.resolve(appDir, ENTRY_FILE)
+
+  const bundler = new Bundler(entry, {
+    outDir: path.resolve(appDir, './.carpen'),
+    cacheDir: path.resolve(appDir, './.carpen_cache'),
+    minify: true,
+    sourceMaps: false,
+    watch: false,
+  })
+
+  await bundler.bundle()
 }
