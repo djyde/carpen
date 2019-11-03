@@ -27,10 +27,8 @@ export async function start (appDir: string, options: BeibyStartOptions = {}) {
 
   console.log('launching app...')
   const app = await carlo.launch({
-    args: [
-      `--allow-running-insecure-content`
-    ]
   })
+  console.log('launched')
 
   if (IS_DEV) {
     app.serveOrigin(`http://${HOST}:${PORT}`)

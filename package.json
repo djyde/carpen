@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {
-    "start": "tsc --watch"
+    "start": "tsc --watch",
+    "clean": "rm -rf lib",
+    "build": "npm run clean && tsc",
+    "prepublish": "npm run build"
   },
   "files": [
     "lib"
