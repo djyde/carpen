@@ -13,6 +13,10 @@ const app = yargs
     describe: 'Dev server port',
     type: 'number'
   })
+  .option('d', {
+    alias: 'expose',
+    type: 'string'
+  })
   
   .command('build', 'Build up your app', {
 
@@ -29,6 +33,7 @@ if (app._.length === 0) {
   // dev
   carpen.dev(process.cwd(), {
     port: app.port,
+    exposed: app.expose,
     entryFile: app.entry,
     dev: true
   })

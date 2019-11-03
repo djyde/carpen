@@ -1,6 +1,6 @@
 import * as carlo from 'carlo'
 import * as path from 'path'
-
+import * as fs from 'fs'
 
 import * as Bundler from 'parcel-bundler'
 
@@ -8,14 +8,32 @@ export type CarpenDevOptions = {
   dev?: boolean,
   port?: number,
   entryFile?: string,
-  exposed?: {[functionName: string]: any},
+  exposed?: string,
 }
 
 export async function dev (appDir: string, options: CarpenDevOptions = {}) {
 
   const IS_DEV = options.dev !== false || process.env.NODE_ENV !== 'production'
   const PORT = options.port || 2342
-  const EXPOSED = options.exposed || {}
+  const EXPOSED = (() => {
+    if (!options.exposed) {
+      return null
+    }
+
+    const exposedFilePath = path.resolve(appDir, options.exposed)
+    if (!fs.existsSync(exposedFilePath)) {
+      console.warn(`[carpen] exposed file ${exposedFilePath} is not exist`)
+      return null
+    }
+
+    try {
+      return require(exposedFilePath) as { [fnName: string]: any }
+    } catch (e) {
+      console.warn(`[carpen] require exposed file error`, e)
+      return null
+    }
+  })()
+
   const HOST = `http://localhost`
   const ENTRY_FILE = options.entryFile || './index.html'
 
@@ -31,10 +49,13 @@ export async function dev (appDir: string, options: CarpenDevOptions = {}) {
 
   const app = await carlo.launch({
   })
-  Object.keys(EXPOSED).map(fnName => {
-    const fn = EXPOSED[fnName]
-    app.exposeFunction(fnName, fn)
-  })
+
+  if (EXPOSED) {
+    Object.keys(EXPOSED).map(fnName => {
+      const fn = EXPOSED[fnName]
+      app.exposeFunction(fnName, fn)
+    })
+  }
 
   if (IS_DEV) {
     app.serveOrigin(`http://${HOST}:${PORT}`)
