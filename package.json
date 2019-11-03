@@ -9,7 +9,9 @@
     "prepublish": "npm run build"
   },
   "files": [
-    "lib"
+    "lib",
+    "bin",
+    "README.md"
   ],
   "bin": "bin/carpen",
   "dependencies": {
